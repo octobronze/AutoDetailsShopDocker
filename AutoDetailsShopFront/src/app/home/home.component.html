@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Shop</title>
+    <style>
+      .divClass{
+        display: flex;
+      }
+      .insideDivs{
+        margin: 50px;
+      }
+      header{
+        margin-left: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <header *ngIf="info.token">
+      <h5>Hello, {{info.username}}, welcome to auto details shop!</h5>
+    </header>
+    <div *ngIf="info.token; else loggedOut" class="divClass">
+
+      <div class="insideDivs">
+
+        
+        <form name="filter" (ngSubmit)="doFilter()" #f="ngForm">
+          <div class="form-group">
+            <label>Filter </label>
+            <input type="text" [(ngModel)]="filter.keyWord" name="detailId" #detailId="ngModel" required>
+          </div>
+          <button type="submit">Find</button>
+        </form>
+        <br>
+        <button (click) = "toggleEdit()" *ngIf="info.role == 'ADMIN'">Toggle edit form</button>
+        <div *ngIf="toggledEdit">
+          <form name="form" (ngSubmit)="add()" #f="ngForm">
+            <div class="form-group">
+              <label>Detail id </label>
+              <input type="text" [(ngModel)]="form.detailId" name="detailId" #detailId="ngModel" pattern="[0-9]+" required>
+            </div>
+            <div class="form-group">
+              <label>Car brand </label>
+              <input type="text" [(ngModel)]="form.carBrand" name="carBrand" #carBrand="ngModel" required>
+            </div>
+            <div class="form-group">
+              <label>Car model </label>
+              <input type="text" [(ngModel)]="form.carModel" name="carModel" #carModel="ngModel" required>
+            </div>
+            <div class="form-group">
+              <label>Price </label>
+              <input type="text" [(ngModel)]="form.price" name="price" #price="ngModel" pattern="\d+(.\d+)?" required>
+            </div>
+            <button type="submit">Add</button>
+          </form>
+        </div>
+      </div>
+      <div class="insideDivs">
+        <table>
+          <thead>
+              <tr>
+                  <th *ngIf="info.role == 'ADMIN'">Id</th>
+                  <th *ngIf="info.role == 'ADMIN'">Detail Id</th>
+                  <th>Car brand</th>
+                  <th>Car model</th>
+                  <th>Price</th>
+              </tr>
+          </thead>
+        
+          <tbody>
+            <tr *ngFor = "let IterOffers of offers?.getOffers(this.keyWord)" (dblclick)="setValues(IterOffers.id, IterOffers.detailId, IterOffers.carBrand, IterOffers.carModel, IterOffers.price)" (mouseleave)="putEditField(IterOffers.id)" (mouseenter)="showDeleteButton(IterOffers.id)"> 
+              <td *ngIf="info.role == 'ADMIN'">
+                <label>{{IterOffers.id}}</label>
+              </td>
+              <td *ngIf="info.role == 'ADMIN'">
+                <label *ngIf="editField != IterOffers.id; else editDI">{{IterOffers.detailId}}</label>
+                <ng-template #editDI>
+                  <input [(ngModel)]="putForm.detailId" name="putDetailId" #putDetailId="ngModel" value="{{IterOffers.detailId}}">
+                </ng-template>
+              </td> 
+              <td>
+                <label *ngIf="editField != IterOffers.id; else editCB">{{IterOffers.carBrand}}</label>
+                <ng-template #editCB>
+                  <input value="{{IterOffers.carBrand}}" type="text" [(ngModel)]="putForm.carBrand" name="putCarBrand" #putCarBrand="ngModel" required>
+                </ng-template>
+              </td>
+              <td>
+                <label *ngIf="editField != IterOffers.id; else editCM">{{IterOffers.carModel}}</label>
+                <ng-template #editCM>
+                  <input value="{{IterOffers.carModel}}" type="text" [(ngModel)]="putForm.carModel" name="putCarModel" #putCarModel="ngModel" required>
+                </ng-template>
+              </td>
+              <td>
+                <label *ngIf="editField != IterOffers.id; else editP">{{IterOffers.price}}</label>
+                <ng-template #editP>
+                  <input value="{{IterOffers.price}}" type="text" [(ngModel)]="putForm.price" name="putCarPrice" #putCarPrice="ngModel" required>
+                </ng-template>
+              </td>
+              <td><button class="btn btn-secondary" (click)="delete(IterOffers.id)" *ngIf="info.role == 'ADMIN' && deleteVisability == IterOffers.id">Delete</button></td>
+            </tr>
+          </tbody>
+        
+        </table>
+      </div>
+    </div>
+      <ng-template #loggedOut>
+      Please login.
+      </ng-template>
+    </body>
+</html>

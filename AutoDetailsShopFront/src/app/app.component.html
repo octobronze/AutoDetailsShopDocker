@@ -1,0 +1,27 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <select class="navbar-header" onchange="location = this.value;">
+      <option value="">
+        Choose an option
+      </option>
+      <option value="/auth/login" *ngIf="!isLogged()">
+        Login
+      </option>
+      <option value="/auth/register" *ngIf="!isLogged()">
+        Register
+      </option>
+      <option value="/userlist" *ngIf="isAdmin()">
+        Users list
+      </option>
+      <option value="4" *ngIf="isLogged()" (click)="logout()">
+        Logout
+      </option>
+      <option value="/home" *ngIf="isLogged()">
+        Auto detail catalog
+      </option>
+    </select>
+  </div>
+</nav>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
