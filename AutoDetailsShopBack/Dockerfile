@@ -4,7 +4,7 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
-RUN ./mvnw clean package -DskipTests
+RUN (chmod +x mvnw) && (./mvnw clean package -DskipTests)
 
 FROM openjdk:17-alpine3.13
 WORKDIR /usr/src/app/backend
