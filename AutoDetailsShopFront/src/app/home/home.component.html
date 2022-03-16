@@ -79,19 +79,19 @@
                 </ng-template>
               </td> 
               <td>
-                <label *ngIf="editField != IterOffers.id; else editCB">{{IterOffers.carBrand}}</label>
+                <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editCB">{{IterOffers.carBrand}}</label>
                 <ng-template #editCB>
                   <input value="{{IterOffers.carBrand}}" type="text" [(ngModel)]="putForm.carBrand" name="putCarBrand" #putCarBrand="ngModel" required>
                 </ng-template>
               </td>
               <td>
-                <label *ngIf="editField != IterOffers.id; else editCM">{{IterOffers.carModel}}</label>
+                <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editCM">{{IterOffers.carModel}}</label>
                 <ng-template #editCM>
                   <input value="{{IterOffers.carModel}}" type="text" [(ngModel)]="putForm.carModel" name="putCarModel" #putCarModel="ngModel" required>
                 </ng-template>
               </td>
               <td>
-                <label *ngIf="editField != IterOffers.id; else editP">{{IterOffers.price}}</label>
+                <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editP">{{IterOffers.price}}</label>
                 <ng-template #editP>
                   <input value="{{IterOffers.price}}" type="text" [(ngModel)]="putForm.price" name="putCarPrice" #putCarPrice="ngModel" required>
                 </ng-template>

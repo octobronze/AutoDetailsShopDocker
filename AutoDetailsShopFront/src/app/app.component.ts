@@ -8,7 +8,6 @@ import { TokenStorageService } from './auth/token-storage.service';
 })
 export class AppComponent {
   title = 'front';
-
   constructor(private tokenStorage: TokenStorageService){}
 
   isAdmin(){
