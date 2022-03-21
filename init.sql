@@ -43,7 +43,9 @@ INSERT INTO details(detail_name) VALUES
 	('headlights');
 
 INSERT INTO users (username, password, first_name, last_name, role) VALUES
-('Max', '$2a$12$2h6GG2lkPydluZvZro2YYOigM5YskqkVbVkJ9sSkbGdwBsrN3d7MK', 'Maxim', 'Gromyko', 'ADMIN');
+('Max', '$2a$12$2h6GG2lkPydluZvZro2YYOigM5YskqkVbVkJ9sSkbGdwBsrN3d7MK', 'Maxim', 'Gromyko', 'ADMIN'),
+('Den', '$2a$12$eD.0COMh0fr61nMY1CWmTOiIv9v8BnJ1E.xgBb4w0kjIeLGMe83HO', 'Denis', 'Vorozhtsov', 'USER'),
+('Tom', '$2a$12$qLqVy9asyZWfpabj4otkQeA./H9TmcEeMfncUyKV8oEr0c9C799Ma', 'Artyom', 'Maiseikov', 'USER');
 
 
 INSERT INTO offers(car_brand, car_model, detail_id, price) VALUES

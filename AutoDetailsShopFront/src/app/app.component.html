@@ -1,25 +1,26 @@
 <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <select class="navbar-header" onchange="location = this.value">
-      <option value="">
-        Choose an option
-      </option>
-      <option value="/auth/login" *ngIf="!isLogged()">
-        Login
-      </option>
-      <option value="/auth/register" *ngIf="!isLogged()">
-        Register
-      </option>
-      <option value="/usersList" *ngIf="isAdmin()">
-        Users list
-      </option>
-      <option value="/home" *ngIf="isLogged()">
-        Auto detail catalog
-      </option>
-    </select>
-    <button *ngIf="isLogged()" (click)="logout()">
-      Logout
-    </button>
+  <header *ngIf="isLogged()" class="header-welcome">Hello, {{getUsername()}}, welcome!</header>
+  <div id="menu-container">
+    <div id="menu-wrapper">
+      <div id="hamburger-menu"><span></span><span></span><span></span></div>
+    </div>
+    <ul class="menu-list accordion">
+        <li id="nav1" class="toggle accordion-toggle" *ngIf="!isLogged()">
+          <a class="menu-link" href="auth/login">Login</a>
+        </li>
+        <li id="nav2" class="toggle accordion-toggle" *ngIf="!isLogged()">
+          <a class="menu-link" href="auth/register">Sign Up</a>
+        </li>
+        <li id="nav3" class="toggle accordion-toggle" *ngIf="isLogged()">
+          <a class="menu-link" href="home">Auto details catalog</a>
+        </li>
+        <li id="nav4" class="toggle accordion-toggle" *ngIf="isAdmin()"> 
+          <a class="menu-link" href="usersList">User list</a>
+        </li>
+        <li id="nav5" class="toggle accordion-toggle" *ngIf="isLogged()"> 
+          <a class="menu-link" (click)="logout()">Logout</a>
+        </li>
+    </ul>
   </div>
 </nav>
 <div class="container">
