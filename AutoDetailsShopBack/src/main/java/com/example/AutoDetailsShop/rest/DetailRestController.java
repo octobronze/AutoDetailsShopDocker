@@ -1,9 +1,7 @@
 package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.Detail;
-import com.example.AutoDetailsShop.domain.Offer;
 import com.example.AutoDetailsShop.service.DetailService;
-import com.example.AutoDetailsShop.service.DetailServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,7 +32,7 @@ public class DetailRestController {
 
         Detail detail = detailService.getById(detailId);
 
-        if(detailId == null){
+        if(detail == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 

@@ -5,7 +5,7 @@
     
     <form name="filter" (ngSubmit)="doFilter()" #f="ngForm">
       <div class="form-group">
-        <input type="text" placeholder="Filter" [(ngModel)]="filter.keyWord" name="detailId" #detailId="ngModel" required class="form-control">
+        <input type="text" placeholder="Filter" [(ngModel)]="filter.keyWord" name="detail" #detail="ngModel" required class="form-control">
       </div>
       <input type="submit" value="Find" class="form-submit">
     </form>
@@ -14,13 +14,13 @@
     <div *ngIf="toggledEdit">
       <form name="form" (ngSubmit)="add()" #f="ngForm" ngNativeValidate>
         <div class="form-group">
-          <input type="text" [(ngModel)]="form.detailId" name="detailId" placeholder="Detail id" #detailId="ngModel" pattern="[1-9]|(10)|(11)" title="No such detail id in database" required class="form-control">
+          <input type="text" [(ngModel)]="form.detailId" name="detail id" placeholder="Detail id" #detail="ngModel" pattern={{detailsIdsCheck}} title="No such detail id in database" required class="form-control">
         </div>
         <div class="form-group">
-          <input type="text" [(ngModel)]="form.carBrand" placeholder="Car brand" name="carBrand" #carBrand="ngModel" required class="form-control">
+          <input type="text" [(ngModel)]="form.carBrandId" placeholder="Car brand id" name="carBrandId" #carBrand="ngModel" pattern={{carBrandsIdsCheck}} required class="form-control">
         </div>
         <div class="form-group">
-          <input type="text" [(ngModel)]="form.carModel" placeholder="Car model" name="carModel" #carModel="ngModel" required class="form-control">
+          <input type="text" [(ngModel)]="form.carModelId" placeholder="Car model id" name="carModelId" #carModel="ngModel" pattern={{carModelsIdsCheck}} required class="form-control">
         </div>
         <div class="form-group">
           <input type="text" [(ngModel)]="form.price" placeholder="Price" name="price" #price="ngModel" pattern="\d+(.\d+)?" title="Incorrect format!" required class="form-control">
@@ -34,7 +34,7 @@
       <thead>
           <tr>
               <th *ngIf="info.role == 'ADMIN'">Id</th>
-              <th>Detail Id</th>
+              <th>Detail</th>
               <th>Car brand</th>
               <th>Car model</th>
               <th>Price</th>
@@ -42,33 +42,33 @@
       </thead>
     
       <tbody>
-        <tr *ngFor = "let IterOffers of offers?.getOffers(this.keyWord)" (dblclick)="setValues(IterOffers.id, IterOffers.detailId, IterOffers.carBrand, IterOffers.carModel, IterOffers.price)" (mouseleave)="putEditField(IterOffers.id)" (mouseenter)="showDeleteButton(IterOffers.id)"> 
+        <tr *ngFor = "let IterOffers of offers?.getOffers(this.keyWord)" (dblclick)="setValues(IterOffers.id, IterOffers.detail, IterOffers.carBrand, IterOffers.carModel, IterOffers.price)" (mouseleave)="putEditField(IterOffers.id)" (mouseenter)="showDeleteButton(IterOffers.id)"> 
           <td *ngIf="info.role == 'ADMIN'">
             <label>{{IterOffers.id}}</label>
           </td>
           <td>
             <!-- != to == -->
-            <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editDI">{{IterOffers.detailId}}</label>
+            <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editDI">{{IterOffers.detail.detailName}}</label>
             <ng-template #editDI>
-              <input [(ngModel)]="putForm.detailId" name="putDetailId" class="table-input" #putDetailId="ngModel" value="{{IterOffers.detailId}}">
+              <input [(ngModel)]="putForm.detailName" name="putDetailName" class="table-input" #putDetailName="ngModel" value="{{IterOffers.detail.detailName}}">
             </ng-template>
           </td> 
           <td>
-            <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editCB">{{IterOffers.carBrand}}</label>
+            <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editCB">{{IterOffers.carBrand.carBrandName}}</label>
             <ng-template #editCB>
-              <input value="{{IterOffers.carBrand}}" type="text" class="table-input" [(ngModel)]="putForm.carBrand" name="putCarBrand" #putCarBrand="ngModel" required>
+              <input type="text" class="table-input" [(ngModel)]="putForm.carBrandName" name="putCarBrandName" #putCarBrandName="ngModel" value="{{IterOffers.carBrand.carBrandName}}">
             </ng-template>
           </td>
           <td>
-            <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editCM">{{IterOffers.carModel}}</label>
+            <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editCM">{{IterOffers.carModel.carModelName}}</label>
             <ng-template #editCM>
-              <input value="{{IterOffers.carModel}}" type="text" class="table-input" [(ngModel)]="putForm.carModel" name="putCarModel" #putCarModel="ngModel" required>
+              <input type="text" class="table-input" [(ngModel)]="putForm.carModelName" name="putCarModelName" #putCarModelName="ngModel" value="{{IterOffers.carModel.carModelName}}">
             </ng-template>
           </td>
           <td>
             <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editP">{{IterOffers.price}}</label>
             <ng-template #editP>
-              <input value="{{IterOffers.price}}" type="text" class="table-input" [(ngModel)]="putForm.price" name="putCarPrice" #putCarPrice="ngModel" required>
+              <input type="text" class="table-input" [(ngModel)]="putForm.price" name="putCarPrice" #putCarPrice="ngModel" value="{{IterOffers.price}}">
             </ng-template>
           </td>
           <!-- == to != -->

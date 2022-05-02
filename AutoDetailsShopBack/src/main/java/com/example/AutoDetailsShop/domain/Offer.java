@@ -16,16 +16,19 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Offer {
 
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "detail_id")
-    private Long detailId;
-    @Column(name = "car_brand")
-    private String carBrand;
-    @Column(name = "car_model")
-    private String carModel;
+    @ManyToOne
+    @JoinColumn(name = "detail_id")
+    private Detail detail;
+    @ManyToOne
+    @JoinColumn(name = "car_brand_id")
+    private CarBrand carBrand;
+    @ManyToOne
+    @JoinColumn(name = "car_model_id")
+    private CarModel carModel;
     @Column(name = "price")
     private BigDecimal price;
 

@@ -15,20 +15,20 @@ export class UsersService {
   private usersUrl = 'http://localhost:8080/api/users/';
 
 
-  getUsers(): Observable<UsersInfo[]>{
-      return this.http.get<UsersInfo[]>(this.usersUrl);
+  getUsers(): Observable<any[]>{
+      return this.http.get<any[]>(this.usersUrl);
   }
 
-  addUser(user: any): Observable<UsersInfo>{
-      return this.http.post<UsersInfo>(this.usersUrl, user, httpOptions);
+  addUser(user: any): Observable<any>{
+      return this.http.post<any>(this.usersUrl, user, httpOptions);
   }
 
   removeUser(id: number): Observable<string>{
       return this.http.delete<string>(this.usersUrl + id.toString(), httpOptions);
   }
 
-  setUSer(id: number, usersInfo: UsersInfo): Observable<UsersInfo>{
-    return this.http.post<UsersInfo>(this.usersUrl + id.toString(), usersInfo, httpOptions);
+  setUSer(id: number, any: any): Observable<any>{
+    return this.http.post<any>(this.usersUrl + id.toString(), any, httpOptions);
   }
 
   constructor(private http: HttpClient) { 

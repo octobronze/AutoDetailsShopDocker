@@ -20,7 +20,7 @@ export class OffersService{
       return this.http.get<OffersInfo[]>(this.offersUrl);
   }
 
-  addOffer(offer: any): Observable<OffersInfo>{
+  addOffer(offer: OffersInfo): Observable<OffersInfo>{
       return this.http.post<OffersInfo>(this.offersUrl, offer, httpOptions);
   }
 
@@ -28,8 +28,8 @@ export class OffersService{
       return this.http.delete<string>(this.offersUrl + id.toString(), httpOptions);
   }
 
-  setOffer(offer: any): Observable<any>{
-    return this.http.put<any>(this.offersUrl, offer, httpOptions);
+  setOffer(offer: OffersInfo): Observable<OffersInfo>{
+    return this.http.put<OffersInfo>(this.offersUrl, offer, httpOptions);
   }
 
   constructor(private http: HttpClient) { 

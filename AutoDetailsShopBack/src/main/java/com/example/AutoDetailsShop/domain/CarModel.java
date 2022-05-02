@@ -6,22 +6,22 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
-@Table(name = "details")
 @Entity
+@Table(name="car_models")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class Detail {
+public class CarModel {
 
     @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="detail_name", nullable = false)
-    private String detailName;
+
+    @Column(name="car_model_name", nullable = false)
+    private String carModelName;
 
 }

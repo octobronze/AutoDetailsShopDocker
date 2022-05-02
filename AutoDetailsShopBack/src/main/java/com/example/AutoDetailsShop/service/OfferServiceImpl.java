@@ -36,4 +36,5 @@ public class OfferServiceImpl implements OfferService{
     public List<Offer> getAll(){
         return offerRepo.findAll();
     }
+
 }

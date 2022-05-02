@@ -3,6 +3,7 @@ package com.example.AutoDetailsShop.domain;
 import lombok.Data;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -17,4 +18,8 @@ public class RegRequestDTO {
     private String firstName;
     @Size(min = 1, max = 40)
     private String lastName;
+    @Email
+    private String email;
+    @Size(min = 4, max = 6)
+    private String sex;
 }

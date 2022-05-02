@@ -1,5 +1,7 @@
 package com.example.AutoDetailsShop.service;
 
+import com.example.AutoDetailsShop.domain.Role;
+import com.example.AutoDetailsShop.domain.Status;
 import com.example.AutoDetailsShop.domain.User;
 import com.example.AutoDetailsShop.repos.UserRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,8 @@ public class UserServiceImpl implements UserService {
         if(userRepo.findByUsername(user.getUsername()).isPresent()) {
             return false;
         }
+        user.setRole(Role.USER);
+        user.setStatus(Status.Suspended);
         userRepo.save(user);
         return true;
     }

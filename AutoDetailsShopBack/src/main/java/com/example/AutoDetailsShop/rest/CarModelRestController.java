@@ -1,8 +1,7 @@
 package com.example.AutoDetailsShop.rest;
 
-
-import com.example.AutoDetailsShop.domain.Offer;
-import com.example.AutoDetailsShop.service.OfferService;
+import com.example.AutoDetailsShop.domain.CarModel;
+import com.example.AutoDetailsShop.service.CarModelService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,92 +12,87 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/offers/")
-public class OfferRestController {
+@RequestMapping("/api/car_models/")
+public class CarModelRestController {
+    private final CarModelService carModelService;
 
-
-    private final OfferService offerService;
-
-    public OfferRestController(@Qualifier("offerServiceImpl") OfferService offerService) {
-        this.offerService = offerService;
+    public CarModelRestController(@Qualifier("carModelServiceImpl") CarModelService carModelService){
+        this.carModelService = carModelService;
     }
 
-
     @RequestMapping(value  = "{id}", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<Offer> getOffer(@PathVariable("id") Long offerId){
+    @PreAuthorize("hasAuthority('developer:read')")
+    public ResponseEntity<CarModel> getCarModel(@PathVariable("id") Long carModelId){
 
-        if(offerId == null){
+        if(carModelId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Offer offer = offerService.getById(offerId);
+        CarModel carModel = carModelService.getById(carModelId);
 
-        if(offer == null){
+        if(carModel == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(offer, HttpStatus.OK);
+        return new ResponseEntity<>(carModel, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Offer> saveOffer(@RequestBody @Valid Offer offer){
+    public ResponseEntity<CarModel> saveCarModel(@RequestBody @Valid CarModel carModel){
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        if(offer == null){
+        if(carModel == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        offerService.save(offer);
+        carModelService.save(carModel);
 
-        return new ResponseEntity<>(offer, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(carModel, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Offer> updateOffer(@RequestBody @Valid Offer offer){
+    public ResponseEntity<CarModel> updateCarModel(@RequestBody @Valid CarModel carModel){
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        if(offer == null){
+        if(carModel == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        offerService.save(offer);
+        carModelService.save(carModel);
 
-        return new ResponseEntity<>(offer, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(carModel, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value  = "{id}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Offer> deleteOffer(@PathVariable("id") Long offerId){
-        if(offerId == null){
+    public ResponseEntity<CarModel> deleteCarModel(@PathVariable("id") Long carModelId){
+        if(carModelId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Offer offer = offerService.getById(offerId);
+        CarModel carModel = carModelService.getById(carModelId);
 
-        if(offer == null){
+        if(carModel == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        offerService.delete(offer);
+        carModelService.delete(carModel);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<Offer>> getAllOffers(){
+    public ResponseEntity<List<CarModel>> getAllCarModels(){
 
-        List<Offer> offers = offerService.getAll();
+        List<CarModel> carModels = carModelService.getAll();
 
-        if(offers.isEmpty()){
+        if(carModels.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(offers, HttpStatus.OK);
+        return new ResponseEntity<>(carModels, HttpStatus.OK);
     }
 }
-

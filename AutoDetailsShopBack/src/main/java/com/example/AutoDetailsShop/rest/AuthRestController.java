@@ -1,12 +1,9 @@
 package com.example.AutoDetailsShop.rest;
 
-import com.example.AutoDetailsShop.domain.AuthRequestDTO;
-import com.example.AutoDetailsShop.domain.RegRequestDTO;
-import com.example.AutoDetailsShop.domain.Role;
-import com.example.AutoDetailsShop.domain.User;
+import com.example.AutoDetailsShop.domain.*;
 import com.example.AutoDetailsShop.repos.UserRepo;
 import com.example.AutoDetailsShop.security.JwtTokenProvider;
-import com.example.AutoDetailsShop.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSessionBindingEvent;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/auth")
 public class AuthRestController {
 
@@ -51,6 +50,8 @@ public class AuthRestController {
             response.put("username", user.getUsername());
             response.put("role", user.getRole().name());
             response.put("token", token);
+            user.setStatus(Status.Active);
+            userRepo.save(user);
             return ResponseEntity.ok(response);
         }catch (AuthenticationException e){
             return new ResponseEntity<>("Invalid username/password", HttpStatus.FORBIDDEN);
@@ -59,6 +60,10 @@ public class AuthRestController {
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
+        String username = request.getRemoteUser();
+        User user = userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username doesn't exist"));
+        user.setStatus(Status.Suspended);
+        userRepo.save(user);
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request, response, null);
     }
@@ -77,6 +82,9 @@ public class AuthRestController {
         user.setRole(Role.USER);
         user.setFirstName(requestDTO.getFirstName());
         user.setLastName(requestDTO.getLastName());
+        user.setSex(requestDTO.getSex());
+        user.setStatus(Status.Suspended);
+        user.setEmail(requestDTO.getEmail());
         userRepo.save(user);
         return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
     }
