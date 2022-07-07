@@ -4,6 +4,9 @@ package com.example.AutoDetailsShop.rest;
 import com.example.AutoDetailsShop.domain.Offer;
 import com.example.AutoDetailsShop.service.OfferService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.awt.*;
 import java.util.List;
 
 
@@ -93,6 +97,25 @@ public class OfferRestController {
     public ResponseEntity<List<Offer>> getAllOffers(){
 
         List<Offer> offers = offerService.getAll();
+
+        if(offers.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(offers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "by_detail_name", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<Offer>> getOffersWithPageByDetailName(
+                                                    @RequestParam(required = false) String detailName,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam() int size){
+
+        Pageable paging = PageRequest.of(page, size);
+        Page<Offer> pageOffers = offerService.getAllWithPagesByDetailName(detailName, paging);
+        List<Offer> offers = pageOffers.getContent();
+
 
         if(offers.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

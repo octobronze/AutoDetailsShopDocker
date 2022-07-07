@@ -177,13 +177,13 @@ export class HomeComponent implements OnInit {
 
   setValues(id: number, detail: DetailsInfo, carBrand: CarBrandsInfo, carModel: CarModelsInfo, price: DoubleRange){
     this.editField = id;
-    if(this.details?.getByName(this.putForm.detailName) != null){
+    if(this.details?.getByName(detail.detailName) != null){
       this.putForm.detailName = detail.detailName;
     }
-    if(this.carBrands?.getByName(this.putForm.carBrandName) != null){
+    if(this.carBrands?.getByName(carBrand.carBrandName) != null){
       this.putForm.carBrandName = carBrand.carBrandName;
     }
-    if(this.carModels?.getByName(this.putForm.carModelName) != null){
+    if(this.carModels?.getByName(carModel.carModelName) != null){
       this.putForm.carModelName = carModel.carModelName;
     }
     this.putForm.price = price;

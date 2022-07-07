@@ -31,5 +31,4 @@ public class Offer {
     private CarModel carModel;
     @Column(name = "price")
     private BigDecimal price;
-
 }

@@ -50,7 +50,7 @@
             <!-- != to == -->
             <label *ngIf="editField != IterOffers.id || info.role != 'ADMIN'; else editDI">{{IterOffers.detail.detailName}}</label>
             <ng-template #editDI>
-              <input [(ngModel)]="putForm.detailName" name="putDetailName" class="table-input" #putDetailName="ngModel" value="{{IterOffers.detail.detailName}}">
+              <input type="text" class="table-input" [(ngModel)]="putForm.detailName" name="putDetailName" #putDetailName="ngModel" value="{{IterOffers.detail.detailName}}">
             </ng-template>
           </td> 
           <td>

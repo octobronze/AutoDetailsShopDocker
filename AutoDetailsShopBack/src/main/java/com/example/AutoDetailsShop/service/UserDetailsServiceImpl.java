@@ -1,7 +1,8 @@
-package com.example.AutoDetailsShop.security;
+package com.example.AutoDetailsShop.service;
 
 import com.example.AutoDetailsShop.domain.User;
 import com.example.AutoDetailsShop.repos.UserRepo;
+import com.example.AutoDetailsShop.security.SecurityUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

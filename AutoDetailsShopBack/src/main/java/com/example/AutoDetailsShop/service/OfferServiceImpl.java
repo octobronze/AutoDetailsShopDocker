@@ -3,6 +3,8 @@ package com.example.AutoDetailsShop.service;
 import com.example.AutoDetailsShop.domain.Offer;
 import com.example.AutoDetailsShop.repos.OfferRepo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,5 +38,15 @@ public class OfferServiceImpl implements OfferService{
     public List<Offer> getAll(){
         return offerRepo.findAll();
     }
+
+    @Override
+    public Page<Offer> getAllWithPagesByDetailName(String detailName, Pageable pageable) {
+        if(detailName == null){
+            return offerRepo.findAll(pageable);
+        }else{
+            return offerRepo.findOfferByDetail_DetailName(detailName, pageable);
+        }
+    }
+
 
 }
