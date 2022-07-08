@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -94,27 +95,18 @@ public class OfferRestController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<Offer>> getAllOffers(){
-
-        List<Offer> offers = offerService.getAll();
-
-        if(offers.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(offers, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "by_detail_name", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<Offer>> getOffersWithPageByDetailName(
-                                                    @RequestParam(required = false) String detailName,
-                                                    @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam() int size){
+    public ResponseEntity<List<Offer>> getAllOffers(
+            @RequestParam(required = false) String detailName,
+            @RequestParam(required = false) String carBrandName,
+            @RequestParam(required = false) String carModelName,
+            @RequestParam(required = false)BigDecimal price,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "99999997", required = false) int size){
 
         Pageable paging = PageRequest.of(page, size);
-        Page<Offer> pageOffers = offerService.getAllWithPagesByDetailName(detailName, paging);
+        Page<Offer> pageOffers = offerService.getAll(detailName, carBrandName, carModelName, price, paging);
         List<Offer> offers = pageOffers.getContent();
+
 
 
         if(offers.isEmpty()){

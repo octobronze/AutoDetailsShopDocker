@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -35,18 +36,11 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public List<Offer> getAll(){
-        return offerRepo.findAll();
+    public Page<Offer> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, Pageable pageable){
+        return offerRepo.findALl(detailName, carBrandName, carModelName, price, pageable);
     }
 
-    @Override
-    public Page<Offer> getAllWithPagesByDetailName(String detailName, Pageable pageable) {
-        if(detailName == null){
-            return offerRepo.findAll(pageable);
-        }else{
-            return offerRepo.findOfferByDetail_DetailName(detailName, pageable);
-        }
-    }
+
 
 
 }
