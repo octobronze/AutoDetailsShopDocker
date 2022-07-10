@@ -11,9 +11,4 @@ import java.math.BigDecimal;
 
 public interface OfferRepo extends JpaRepository<Offer, Long> {
 
-    @Query(value = "SELECT o FROM Offer o WHERE (:detailName is null OR o.detail.detailName = :detailName)" +
-            "AND (:carBrandName is null OR o.carBrand.carBrandName = :carBrandName)" +
-            "AND (:carModelName is null OR o.carModel.carModelName = :carModelName) " +
-            "AND (:price is null OR o.price = :price)")
-    Page<Offer> findALl(@Param("detailName") String detailName, @Param("carBrandName") String carBrandName, @Param("carModelName") String carModelName, @Param("price") BigDecimal price, Pageable pageable);
 }

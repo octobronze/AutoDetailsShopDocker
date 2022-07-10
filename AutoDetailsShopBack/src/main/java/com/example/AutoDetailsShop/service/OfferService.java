@@ -5,6 +5,7 @@ import com.example.AutoDetailsShop.repos.OfferRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface OfferService {
 
     void delete(Offer offer);
 
-    Page<Offer> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, Pageable pageable);
+    List<Offer> getAll(TypedQuery<Offer> query, int page, int size);
 }

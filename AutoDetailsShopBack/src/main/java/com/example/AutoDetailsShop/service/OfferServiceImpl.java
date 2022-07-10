@@ -1,12 +1,14 @@
 package com.example.AutoDetailsShop.service;
 
 import com.example.AutoDetailsShop.domain.Offer;
+import com.example.AutoDetailsShop.filters.Pagination;
 import com.example.AutoDetailsShop.repos.OfferRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -36,11 +38,8 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public Page<Offer> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, Pageable pageable){
-        return offerRepo.findALl(detailName, carBrandName, carModelName, price, pageable);
+    public List<Offer> getAll(TypedQuery<Offer> query, int page, int size) {
+        return Pagination.getPage(query, page, size);
     }
-
-
-
 
 }

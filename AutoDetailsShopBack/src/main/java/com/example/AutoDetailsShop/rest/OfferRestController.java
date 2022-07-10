@@ -2,6 +2,7 @@ package com.example.AutoDetailsShop.rest;
 
 
 import com.example.AutoDetailsShop.domain.Offer;
+import com.example.AutoDetailsShop.filters.OfferFilter;
 import com.example.AutoDetailsShop.service.OfferService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -103,11 +104,7 @@ public class OfferRestController {
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "99999997", required = false) int size){
 
-        Pageable paging = PageRequest.of(page, size);
-        Page<Offer> pageOffers = offerService.getAll(detailName, carBrandName, carModelName, price, paging);
-        List<Offer> offers = pageOffers.getContent();
-
-
+        List<Offer> offers = offerService.getAll(OfferFilter.filter(detailName, carBrandName, carModelName, price), page, size);
 
         if(offers.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
