@@ -22,7 +22,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=max
       - SPRING_DATASOURCE_PASSWORD=max
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-          
+      - JAVAX_PERSISTENCE_JDBC_URL=jdbc:postgresql://db:5432/max
+      - JAVAX_PERSISTENCE_JDBC_USER=max
+      - JAVAX_PERSISTENCE_JDBC_PASSWORD=max
+      - HIBERNATE_HBM2DDL_AUTO=update
+      - HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQL9Dialect
   db:
     image: 'postgres:13.1-alpine'
     container_name: db

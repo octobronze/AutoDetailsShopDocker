@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.awt.*;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -102,7 +103,7 @@ public class OfferRestController {
             @RequestParam(required = false) String carModelName,
             @RequestParam(required = false)BigDecimal price,
             @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "99999997", required = false) int size){
+            @RequestParam(defaultValue = "99999997", required = false) int size) throws IOException {
 
         List<Offer> offers = offerService.getAll(OfferFilter.filter(detailName, carBrandName, carModelName, price), page, size);
 

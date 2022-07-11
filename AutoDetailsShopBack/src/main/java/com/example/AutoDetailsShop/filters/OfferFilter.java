@@ -12,15 +12,19 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.websocket.Session;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Properties;
 
 public final class OfferFilter {
 
 
     private OfferFilter(){}
 
-    public static TypedQuery<Offer> filter(String detailName, String carBrandName, String carModelName, BigDecimal price){
+    public static TypedQuery<Offer> filter(String detailName, String carBrandName, String carModelName, BigDecimal price) throws IOException {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("AutoDetailsShopUnit");
         EntityManager em = emf.createEntityManager();
