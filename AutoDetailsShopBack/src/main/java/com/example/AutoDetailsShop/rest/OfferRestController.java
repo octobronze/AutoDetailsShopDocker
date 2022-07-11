@@ -105,7 +105,7 @@ public class OfferRestController {
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "99999997", required = false) int size) throws IOException {
 
-        List<Offer> offers = offerService.getAll(OfferFilter.filter(detailName, carBrandName, carModelName, price), page, size);
+        List<Offer> offers = offerService.getAll(detailName, carBrandName, carModelName, price, page, size);
 
         if(offers.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

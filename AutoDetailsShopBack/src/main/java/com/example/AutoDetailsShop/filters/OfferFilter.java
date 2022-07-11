@@ -3,6 +3,7 @@ package com.example.AutoDetailsShop.filters;
 import com.example.AutoDetailsShop.domain.Offer;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 
@@ -24,7 +25,7 @@ public final class OfferFilter {
 
     private OfferFilter(){}
 
-    public static TypedQuery<Offer> filter(String detailName, String carBrandName, String carModelName, BigDecimal price) throws IOException {
+    public static Specification<Offer> filter(String detailName, String carBrandName, String carModelName, BigDecimal price) throws IOException {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("AutoDetailsShopUnit");
         EntityManager em = emf.createEntityManager();
@@ -37,14 +38,15 @@ public final class OfferFilter {
         Predicate predicateForCarModelName = criteriaBuilder.equal(offerRoot.get("carModel").get("carModelName"), carModelName);
         Predicate predicateForPrice = criteriaBuilder.equal(offerRoot.get("price"), price);
 
+
         Predicate query = conjunctQueries(null, predicateForDetailName, criteriaBuilder, detailName);
         query = conjunctQueries(query, predicateForCarBrandName, criteriaBuilder, carBrandName);
         query = conjunctQueries(query, predicateForCarModelName, criteriaBuilder, carModelName);
         query = conjunctQueries(query, predicateForPrice, criteriaBuilder, price);
 
-        if(query != null)
-            criteriaQuery.where(query);
-        return em.createQuery(criteriaQuery);
+        final Predicate finalQuery = query;
+
+        return (r, q, c) -> finalQuery;
     }
 
     private static Predicate conjunctQueries(Predicate query1, Predicate query2, CriteriaBuilder criteriaBuilder, Object comparisonParameter){
