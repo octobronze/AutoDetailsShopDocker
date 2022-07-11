@@ -12,14 +12,13 @@
         <class>com.example.AutoDetailsShop.domain.CarModel</class>
         <class>com.example.AutoDetailsShop.domain.Detail</class>
         <class>com.example.AutoDetailsShop.domain.User</class>
-<!--        <properties>-->
-<!--            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>-->
-<!--            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/auto_shop"/>-->
-<!--            <property name="javax.persistence.jdbc.user" value="postgres"/>-->
-<!--            <property name="javax.persistence.jdbc.password" value="postgres"/>-->
-<!--            <property name="hibernate.hbm2ddl.auto" value="update"/>-->
-<!--            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>-->
-<!--        </properties>-->
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://db:5432/max"/>
+            <property name="javax.persistence.jdbc.user" value="max"/>
+            <property name="javax.persistence.jdbc.password" value="max"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
+        </properties>
     </persistence-unit>
-
 </persistence>
