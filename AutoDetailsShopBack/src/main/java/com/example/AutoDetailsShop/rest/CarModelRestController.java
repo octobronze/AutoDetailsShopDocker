@@ -1,6 +1,9 @@
 package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.CarModel;
+import com.example.AutoDetailsShop.exceptions.NoDataException;
+import com.example.AutoDetailsShop.exceptions.NotFoundException;
+import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.service.CarModelService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -23,76 +26,45 @@ public class CarModelRestController {
 
     @RequestMapping(value  = "{id}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developer:read')")
-    public ResponseEntity<CarModel> getCarModel(@PathVariable("id") Long carModelId){
-
-        if(carModelId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
+    public ResponseEntity<CarModel> getCarModel(@PathVariable("id") Long carModelId) throws ValidationException, NotFoundException {
+        HttpHeaders httpHeaders = new HttpHeaders();
         CarModel carModel = carModelService.getById(carModelId);
-
-        if(carModel == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(carModel, HttpStatus.OK);
+        if(carModel == null)
+            throw new NotFoundException("Car model was not found");
+        return new ResponseEntity<>(carModel, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<CarModel> saveCarModel(@RequestBody @Valid CarModel carModel){
+    public ResponseEntity<CarModel> saveCarModel(@RequestBody @Valid CarModel carModel) throws ValidationException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
-        if(carModel == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         carModelService.save(carModel);
-
         return new ResponseEntity<>(carModel, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<CarModel> updateCarModel(@RequestBody @Valid CarModel carModel){
+    public ResponseEntity<CarModel> updateCarModel(@RequestBody @Valid CarModel carModel) throws ValidationException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
-        if(carModel == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         carModelService.save(carModel);
-
         return new ResponseEntity<>(carModel, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value  = "{id}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<CarModel> deleteCarModel(@PathVariable("id") Long carModelId){
-        if(carModelId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        CarModel carModel = carModelService.getById(carModelId);
-
-        if(carModel == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        carModelService.delete(carModel);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<CarModel> deleteCarModel(@PathVariable("id") Long carModelId) throws ValidationException, NotFoundException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        carModelService.delete(carModelId);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<CarModel>> getAllCarModels(){
-
+    public ResponseEntity<List<CarModel>> getAllCarModels() throws NoDataException {
+        HttpHeaders httpHeaders = new HttpHeaders();
         List<CarModel> carModels = carModelService.getAll();
-
-        if(carModels.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(carModels, HttpStatus.OK);
+        if(carModels.isEmpty())
+            throw new NoDataException("No data was found");
+        return new ResponseEntity<>(carModels, httpHeaders, HttpStatus.OK);
     }
 }

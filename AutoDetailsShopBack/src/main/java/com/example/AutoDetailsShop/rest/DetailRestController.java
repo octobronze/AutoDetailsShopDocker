@@ -1,6 +1,9 @@
 package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.Detail;
+import com.example.AutoDetailsShop.exceptions.NoDataException;
+import com.example.AutoDetailsShop.exceptions.NotFoundException;
+import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.service.DetailService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -24,77 +27,46 @@ public class DetailRestController {
 
     @RequestMapping(value  = "{id}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developer:read')")
-    public ResponseEntity<Detail> getDetail(@PathVariable("id") Long detailId){
-
-        if(detailId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
+    public ResponseEntity<Detail> getDetail(@PathVariable("id") Long detailId) throws ValidationException, NotFoundException {
+        HttpHeaders httpHeaders = new HttpHeaders();
         Detail detail = detailService.getById(detailId);
-
-        if(detail == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(detail, HttpStatus.OK);
+        if(detail == null)
+            throw new NotFoundException("Detail was not found");
+        return new ResponseEntity<>(detail, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Detail> saveDetail(@RequestBody @Valid Detail detail){
+    public ResponseEntity<Detail> saveDetail(@RequestBody @Valid Detail detail) throws ValidationException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
-        if(detail == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         detailService.save(detail);
-
         return new ResponseEntity<>(detail, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Detail> updateDetail(@RequestBody @Valid Detail detail){
+    public ResponseEntity<Detail> updateDetail(@RequestBody @Valid Detail detail) throws ValidationException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
-        if(detail == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         detailService.save(detail);
-
         return new ResponseEntity<>(detail, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value  = "{id}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Detail> deleteDetail(@PathVariable("id") Long detailId){
-        if(detailId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Detail detail = detailService.getById(detailId);
-
-        if(detail == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        detailService.delete(detail);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Detail> deleteDetail(@PathVariable("id") Long detailId) throws ValidationException, NotFoundException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        detailService.delete(detailId);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<Detail>> getAllDetails(){
-
+    public ResponseEntity<List<Detail>> getAllDetails() throws NoDataException {
+        HttpHeaders httpHeaders = new HttpHeaders();
         List<Detail> details = detailService.getAll();
-
-        if(details.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(details, HttpStatus.OK);
+        if(details.isEmpty())
+            throw new NoDataException("Data was not found");
+        return new ResponseEntity<>(details, httpHeaders, HttpStatus.OK);
     }
 
 }

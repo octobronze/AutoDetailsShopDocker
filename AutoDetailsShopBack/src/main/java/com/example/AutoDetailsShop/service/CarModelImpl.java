@@ -1,9 +1,10 @@
 package com.example.AutoDetailsShop.service;
 
 import com.example.AutoDetailsShop.domain.CarModel;
+import com.example.AutoDetailsShop.exceptions.NotFoundException;
+import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.repos.CarModelRepo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,22 +20,29 @@ public class CarModelImpl implements CarModelService{
     }
 
     @Override
-    public CarModel getById(Long id) {
+    public CarModel getById(Long id) throws ValidationException {
+        if(id == null)
+            throw new ValidationException("Id is null");
         return carModelRepo.findById(id).orElse(null);
     }
 
     @Override
-    public void save(CarModel carModel) {
+    public void save(CarModel carModel) throws ValidationException {
+        if(carModel == null)
+            throw new ValidationException("Car model is null");
         carModelRepo.save(carModel);
     }
 
     @Override
-    public void delete(CarModel carModel) {
+    public void delete(Long id) throws ValidationException, NotFoundException {
+        if(id == null)
+            throw new ValidationException("Id is null");
+        CarModel carModel = carModelRepo.findById(id).orElseThrow(() -> new NotFoundException("Car model was not found"));
         carModelRepo.delete(carModel);
     }
 
     @Override
-    public List<CarModel> getAll() {
+    public List<CarModel> getAll(){
         return carModelRepo.findAll();
     }
 }

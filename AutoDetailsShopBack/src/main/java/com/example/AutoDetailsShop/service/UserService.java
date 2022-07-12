@@ -1,15 +1,19 @@
 package com.example.AutoDetailsShop.service;
 
 import com.example.AutoDetailsShop.domain.User;
+import com.example.AutoDetailsShop.exceptions.NotFoundException;
+import com.example.AutoDetailsShop.exceptions.ValidationException;
 
 import java.util.List;
 
 public interface UserService {
-    User getById(Long id);
+    User getById(Long id) throws ValidationException;
 
-    boolean save(User user);
+    User getByUsername(String username) throws ValidationException;
 
-    void delete(User user);
+    void save(User user) throws ValidationException;
+
+    void delete(Long id) throws ValidationException, NotFoundException;
 
     List<User> getAll();
 }

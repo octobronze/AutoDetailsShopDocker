@@ -1,6 +1,7 @@
 package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.*;
+import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
 import com.example.AutoDetailsShop.repos.UserRepo;
 import com.example.AutoDetailsShop.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -69,13 +70,10 @@ public class AuthRestController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> register(@RequestBody @Valid RegRequestDTO requestDTO){
+    public ResponseEntity<?> register(@RequestBody @Valid RegRequestDTO requestDTO) throws AlreadyExistsException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
-        if(userRepo.findByUsername(requestDTO.getUsername()).isPresent()){
-            return new ResponseEntity<>("User already exists", HttpStatus.FOUND);
-        }
-
+        if(userRepo.findByUsername(requestDTO.getUsername()).isPresent())
+            throw new AlreadyExistsException("User already exists");
         User user = new User();
         user.setUsername(requestDTO.getUsername());
         user.setPassword(BCrypt.hashpw(requestDTO.getPassword(), BCrypt.gensalt(12)));

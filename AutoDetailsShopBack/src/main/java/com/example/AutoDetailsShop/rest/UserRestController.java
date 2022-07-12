@@ -1,6 +1,10 @@
 package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.User;
+import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
+import com.example.AutoDetailsShop.exceptions.NoDataException;
+import com.example.AutoDetailsShop.exceptions.NotFoundException;
+import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -27,79 +31,49 @@ public class UserRestController {
         this.userService = userService;
     }
 
-
     @RequestMapping(value  = "{id}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<User> getUser(@PathVariable("id") Long userId){
-        if(userId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
+    public ResponseEntity<User> getUser(@PathVariable("id") Long userId) throws ValidationException, NotFoundException {
+        HttpHeaders httpHeaders = new HttpHeaders();
         User user = userService.getById(userId);
-
-        if(user == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        if(user == null)
+            throw new NotFoundException("User was not found");
+        return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<User> saveUser(@RequestBody @Valid User user){
+    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) throws ValidationException, AlreadyExistsException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
-        if(user == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        if(!userService.save(user)){
-            return new ResponseEntity<>(HttpStatus.FOUND);
-        }
-
+        if(userService.getByUsername(user.getUsername()) != null)
+            throw new AlreadyExistsException("User already exists");
+        userService.save(user);
         return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<User> updateUser(@RequestBody @Valid User user){
+    public ResponseEntity<User> updateUser(@RequestBody @Valid User user) throws ValidationException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
-        if(user == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         userService.save(user);
-
         return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value  = "{id}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<User> deleteOffer(@PathVariable("id") Long userId){
-        if(userId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        User user = userService.getById(userId);
-
-        if(user == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        userService.delete(user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<User> deleteOffer(@PathVariable("id") Long userId) throws ValidationException, NotFoundException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        userService.delete(userId);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<User>> getAllOffers(){
-
+    public ResponseEntity<List<User>> getAllOffers() throws NoDataException {
+        HttpHeaders httpHeaders = new HttpHeaders();
         List<User> users = userService.getAll();
-
         if(users.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new NoDataException("No data was found");
         }
-
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(users, httpHeaders, HttpStatus.OK);
     }
 }

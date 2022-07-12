@@ -1,15 +1,13 @@
 package com.example.AutoDetailsShop.service;
 
 import com.example.AutoDetailsShop.domain.Offer;
+import com.example.AutoDetailsShop.exceptions.NoDataException;
+import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.filters.OfferFilter;
 import com.example.AutoDetailsShop.repos.OfferRepo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -24,27 +22,37 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public Offer getById(Long id){
+    public Offer getById(Long id) throws ValidationException {
+        if(id == null)
+            throw new ValidationException("Id is null");
         return offerRepo.findById(id).orElse(null);
     }
 
     @Override
-    public void save(Offer offer){
+    public void save(Offer offer) throws ValidationException {
+        if(offer == null)
+            throw new ValidationException("Offer is be null");
         offerRepo.save(offer);
     }
 
     @Override
-    public void delete(Offer offer){
+    public void delete(Long id) throws ValidationException, NoDataException {
+        if(id == null)
+            throw new ValidationException("Id is null");
+        Offer offer = offerRepo.findById(id).orElseThrow(() -> new NoDataException("Offer was not found"));
         offerRepo.delete(offer);
     }
 
     @Override
-    public List<Offer> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, int page, int size) throws IOException {
+    public List<Offer> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, int page, int size) {
+        List<Offer> offers;
         if(detailName == null && carBrandName == null
                 && carModelName == null && price == null){
-            return offerRepo.findAll(PageRequest.of(page, size)).getContent();
+            offers = offerRepo.findAll(PageRequest.of(page, size)).getContent();
+        }else{
+            offers = offerRepo.findAll(OfferFilter.filter(detailName, carBrandName, carModelName, price), PageRequest.of(page, size)).getContent();
         }
-        return offerRepo.findAll(OfferFilter.filter(detailName, carBrandName, carModelName, price), PageRequest.of(page, size)).getContent();
+        return offers;
     }
 
 }

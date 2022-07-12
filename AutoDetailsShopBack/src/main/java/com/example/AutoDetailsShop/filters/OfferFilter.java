@@ -1,31 +1,21 @@
 package com.example.AutoDetailsShop.filters;
 
 import com.example.AutoDetailsShop.domain.Offer;
-import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.provider.HibernateUtils;
-import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.websocket.Session;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Properties;
 
 public final class OfferFilter {
 
 
     private OfferFilter(){}
 
-    public static Specification<Offer> filter(String detailName, String carBrandName, String carModelName, BigDecimal price) throws IOException {
+    public static Specification<Offer> filter(String detailName, String carBrandName, String carModelName, BigDecimal price) {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("AutoDetailsShopUnit");
         EntityManager em = emf.createEntityManager();
@@ -37,7 +27,6 @@ public final class OfferFilter {
         Predicate predicateForCarBrandName = criteriaBuilder.equal(offerRoot.get("carBrand").get("carBrandName"), carBrandName);
         Predicate predicateForCarModelName = criteriaBuilder.equal(offerRoot.get("carModel").get("carModelName"), carModelName);
         Predicate predicateForPrice = criteriaBuilder.equal(offerRoot.get("price"), price);
-
 
         Predicate query = conjunctQueries(null, predicateForDetailName, criteriaBuilder, detailName);
         query = conjunctQueries(query, predicateForCarBrandName, criteriaBuilder, carBrandName);
