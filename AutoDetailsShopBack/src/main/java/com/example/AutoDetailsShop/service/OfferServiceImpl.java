@@ -1,7 +1,7 @@
 package com.example.AutoDetailsShop.service;
 
 import com.example.AutoDetailsShop.domain.Offer;
-import com.example.AutoDetailsShop.exceptions.NoDataException;
+import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.filters.OfferFilter;
 import com.example.AutoDetailsShop.repos.OfferRepo;
@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -36,10 +37,10 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public void delete(Long id) throws ValidationException, NoDataException {
+    public void delete(Long id) throws ValidationException, NotFoundException {
         if(id == null)
             throw new ValidationException("Id is null");
-        Offer offer = offerRepo.findById(id).orElseThrow(() -> new NoDataException("Offer was not found"));
+        Offer offer = offerRepo.findById(id).orElseThrow(() -> new NotFoundException("Offer was not found"));
         offerRepo.delete(offer);
     }
 

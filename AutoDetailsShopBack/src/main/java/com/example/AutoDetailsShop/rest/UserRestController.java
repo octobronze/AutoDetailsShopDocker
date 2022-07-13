@@ -2,7 +2,6 @@ package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.User;
 import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
-import com.example.AutoDetailsShop.exceptions.NoDataException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.service.UserService;
@@ -68,12 +67,9 @@ public class UserRestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<User>> getAllOffers() throws NoDataException {
+    public ResponseEntity<List<User>> getAllOffers() {
         HttpHeaders httpHeaders = new HttpHeaders();
         List<User> users = userService.getAll();
-        if(users.isEmpty()){
-            throw new NoDataException("No data was found");
-        }
         return new ResponseEntity<>(users, httpHeaders, HttpStatus.OK);
     }
 }

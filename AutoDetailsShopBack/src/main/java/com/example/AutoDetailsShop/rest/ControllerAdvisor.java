@@ -2,7 +2,6 @@ package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.ErrorResponse;
 import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
-import com.example.AutoDetailsShop.exceptions.NoDataException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,16 +30,6 @@ public class ControllerAdvisor {
         return ErrorResponse.builder()
                 .message(notFoundException.getMessage())
                 .httpStatus(HttpStatus.NOT_FOUND)
-                .timestamp(LocalDateTime.now())
-                .build();
-    }
-
-    @ExceptionHandler(NoDataException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ErrorResponse handleNoDataException(NoDataException noDataException){
-        return ErrorResponse.builder()
-                .message(noDataException.getMessage())
-                .httpStatus(HttpStatus.NO_CONTENT)
                 .timestamp(LocalDateTime.now())
                 .build();
     }

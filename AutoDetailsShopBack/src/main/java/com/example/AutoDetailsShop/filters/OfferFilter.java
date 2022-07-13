@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.util.List;
 
 public final class OfferFilter {
 
@@ -34,6 +35,8 @@ public final class OfferFilter {
         query = conjunctQueries(query, predicateForPrice, criteriaBuilder, price);
 
         final Predicate finalQuery = query;
+        criteriaQuery.where(query);
+        em.createQuery(criteriaQuery);
 
         return (r, q, c) -> finalQuery;
     }

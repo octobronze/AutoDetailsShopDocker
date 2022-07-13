@@ -1,7 +1,6 @@
 package com.example.AutoDetailsShop.service;
 
 import com.example.AutoDetailsShop.domain.Detail;
-import com.example.AutoDetailsShop.exceptions.NoDataException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.repos.DetailRepo;

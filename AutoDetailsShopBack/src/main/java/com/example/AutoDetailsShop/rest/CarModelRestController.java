@@ -1,7 +1,6 @@
 package com.example.AutoDetailsShop.rest;
 
 import com.example.AutoDetailsShop.domain.CarModel;
-import com.example.AutoDetailsShop.exceptions.NoDataException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.service.CarModelService;
@@ -60,11 +59,9 @@ public class CarModelRestController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<CarModel>> getAllCarModels() throws NoDataException {
+    public ResponseEntity<List<CarModel>> getAllCarModels() {
         HttpHeaders httpHeaders = new HttpHeaders();
         List<CarModel> carModels = carModelService.getAll();
-        if(carModels.isEmpty())
-            throw new NoDataException("No data was found");
         return new ResponseEntity<>(carModels, httpHeaders, HttpStatus.OK);
     }
 }
