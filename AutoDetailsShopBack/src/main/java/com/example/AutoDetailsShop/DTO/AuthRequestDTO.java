@@ -1,4 +1,4 @@
-package com.example.AutoDetailsShop.domain;
+package com.example.AutoDetailsShop.DTO;
 
 import lombok.Data;
 

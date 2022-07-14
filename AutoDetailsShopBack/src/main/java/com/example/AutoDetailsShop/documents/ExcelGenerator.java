@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ExcelGenerator {
+public final class ExcelGenerator {
     public static ByteArrayInputStream generateExcelForOffers(OfferService offerService) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Offers");

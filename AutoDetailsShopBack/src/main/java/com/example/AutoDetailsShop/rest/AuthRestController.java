@@ -1,5 +1,7 @@
 package com.example.AutoDetailsShop.rest;
 
+import com.example.AutoDetailsShop.DTO.AuthRequestDTO;
+import com.example.AutoDetailsShop.DTO.RegRequestDTO;
 import com.example.AutoDetailsShop.domain.*;
 import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
 import com.example.AutoDetailsShop.repos.UserRepo;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSessionBindingEvent;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
