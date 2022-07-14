@@ -56,4 +56,9 @@ public class OfferServiceImpl implements OfferService{
         return offers;
     }
 
+    @Override
+    public List<Offer> getAll(){
+        return offerRepo.findAll();
+    }
+
 }

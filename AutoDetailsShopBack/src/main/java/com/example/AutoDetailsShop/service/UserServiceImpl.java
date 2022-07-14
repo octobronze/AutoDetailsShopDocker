@@ -3,6 +3,7 @@ package com.example.AutoDetailsShop.service;
 import com.example.AutoDetailsShop.domain.Role;
 import com.example.AutoDetailsShop.domain.Status;
 import com.example.AutoDetailsShop.domain.User;
+import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.repos.UserRepo;
@@ -27,7 +28,17 @@ public class UserServiceImpl implements UserService {
         return userRepo.findById(id).orElse(null);
     }
 
-    public void save(User user) throws ValidationException {
+    public void save(User user) throws ValidationException, AlreadyExistsException {
+        if(userRepo.findByUsername(user.getUsername()) != null)
+            throw new AlreadyExistsException("User already exists");
+        if(user == null)
+            throw new ValidationException("User is null");
+        user.setRole(Role.USER);
+        user.setStatus(Status.Suspended);
+        userRepo.save(user);
+    }
+
+    public void update(User user) throws ValidationException {
         if(user == null)
             throw new ValidationException("User is null");
         user.setRole(Role.USER);

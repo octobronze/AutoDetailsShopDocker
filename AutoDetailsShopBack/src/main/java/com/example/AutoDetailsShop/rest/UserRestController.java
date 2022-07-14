@@ -44,8 +44,6 @@ public class UserRestController {
     @PreAuthorize("hasAuthority('developers:write')")
     public ResponseEntity<User> saveUser(@RequestBody @Valid User user) throws ValidationException, AlreadyExistsException {
         HttpHeaders httpHeaders = new HttpHeaders();
-        if(userService.getByUsername(user.getUsername()) != null)
-            throw new AlreadyExistsException("User already exists");
         userService.save(user);
         return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
     }
@@ -54,7 +52,7 @@ public class UserRestController {
     @PreAuthorize("hasAuthority('developers:write')")
     public ResponseEntity<User> updateUser(@RequestBody @Valid User user) throws ValidationException {
         HttpHeaders httpHeaders = new HttpHeaders();
-        userService.save(user);
+        userService.update(user);
         return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
     }
 

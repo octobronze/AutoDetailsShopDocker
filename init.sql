@@ -75,7 +75,7 @@ INSERT INTO car_models(car_model_name) VALUES
 	('Xray'),
 	('VAZ-2101'),
 	('VAZ-2102'),
-	('VAZ=2103'),
+	('VAZ-2103'),
 	('VAZ-2104'),
 	('VAZ-2105');
 

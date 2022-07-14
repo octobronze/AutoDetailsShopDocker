@@ -15,4 +15,6 @@ public interface OfferService {
     void delete(Long id) throws ValidationException, NotFoundException;
 
     List<Offer> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, int page, int size);
+
+    List<Offer> getAll();
 }
