@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -51,7 +50,7 @@ public class OfferServiceImpl implements OfferService{
                 && carModelName == null && price == null){
             offers = offerRepo.findAll(PageRequest.of(page, size)).getContent();
         }else{
-            offers = offerRepo.findAll(OfferFilter.filter(detailName, carBrandName, carModelName, price), PageRequest.of(page, size)).getContent();
+            offers = offerRepo.findAll(OfferFilter.filterByAllFields(detailName, carBrandName, carModelName, price), PageRequest.of(page, size)).getContent();
         }
         return offers;
     }
