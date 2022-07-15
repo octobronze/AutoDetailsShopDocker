@@ -22,10 +22,8 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public Offer getById(Long id) throws ValidationException {
-        if(id == null)
-            throw new ValidationException("Id is null");
-        return offerRepo.findById(id).orElse(null);
+    public Offer getById(Long id) throws ValidationException, NotFoundException {
+        return offerRepo.findById(id).orElseThrow(() -> new NotFoundException("Offer was not found"));
     }
 
     @Override

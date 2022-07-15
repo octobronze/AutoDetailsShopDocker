@@ -20,10 +20,10 @@ public class CarModelImpl implements CarModelService{
     }
 
     @Override
-    public CarModel getById(Long id) throws ValidationException {
+    public CarModel getById(Long id) throws ValidationException, NotFoundException {
         if(id == null)
             throw new ValidationException("Id is null");
-        return carModelRepo.findById(id).orElse(null);
+        return carModelRepo.findById(id).orElseThrow(() -> new NotFoundException("Car model was not found"));
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface DetailService {
 
-    Detail getById(Long id) throws ValidationException;
+    Detail getById(Long id) throws ValidationException, NotFoundException;
 
     void save(Detail detail) throws ValidationException;
 

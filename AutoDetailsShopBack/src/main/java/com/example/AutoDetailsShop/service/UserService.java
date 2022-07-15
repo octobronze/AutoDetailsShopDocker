@@ -8,7 +8,7 @@ import com.example.AutoDetailsShop.exceptions.ValidationException;
 import java.util.List;
 
 public interface UserService {
-    User getById(Long id) throws ValidationException;
+    User getById(Long id) throws ValidationException, NotFoundException;
 
     User getByUsername(String username) throws ValidationException;
 

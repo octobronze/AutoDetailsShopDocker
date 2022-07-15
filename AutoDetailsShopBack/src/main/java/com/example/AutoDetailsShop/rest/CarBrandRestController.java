@@ -28,8 +28,6 @@ public class CarBrandRestController {
     public ResponseEntity<CarBrand> getCarBrand(@PathVariable("id") Long carBrandId) throws ValidationException, NotFoundException {
         HttpHeaders httpHeaders = new HttpHeaders();
         CarBrand carBrand = carBrandService.getById(carBrandId);
-        if(carBrand == null)
-            throw new NotFoundException("Car brand was not found");
         return new ResponseEntity<>(carBrand, httpHeaders, HttpStatus.OK);
     }
 

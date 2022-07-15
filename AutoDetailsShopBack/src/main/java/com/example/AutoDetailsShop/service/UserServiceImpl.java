@@ -22,17 +22,15 @@ public class UserServiceImpl implements UserService {
         this.userRepo = userRepo;
     }
 
-    public User getById(Long id) throws ValidationException {
-        if(id == null)
-            throw new ValidationException("Id is null");
-        return userRepo.findById(id).orElse(null);
+    public User getById(Long id) throws ValidationException, NotFoundException {
+        return userRepo.findById(id).orElseThrow(() -> new NotFoundException("User was not found"));
     }
 
     public void save(User user) throws ValidationException, AlreadyExistsException {
-        if(userRepo.findByUsername(user.getUsername()) != null)
-            throw new AlreadyExistsException("User already exists");
         if(user == null)
             throw new ValidationException("User is null");
+        if(userRepo.findByUsername(user.getUsername()).isPresent())
+            throw new AlreadyExistsException("User already exists");
         user.setRole(Role.USER);
         user.setStatus(Status.Suspended);
         userRepo.save(user);

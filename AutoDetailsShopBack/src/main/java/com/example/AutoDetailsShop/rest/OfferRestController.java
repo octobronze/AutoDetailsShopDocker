@@ -39,8 +39,6 @@ public class OfferRestController {
     public ResponseEntity<Offer> getOffer(@PathVariable("id") Long offerId) throws NotFoundException, ValidationException {
         HttpHeaders httpHeaders = new HttpHeaders();
         Offer offer = offerService.getById(offerId);
-        if(offer == null)
-            throw new NotFoundException("Offer not found");
         return new ResponseEntity<>(offer, httpHeaders, HttpStatus.OK);
     }
 

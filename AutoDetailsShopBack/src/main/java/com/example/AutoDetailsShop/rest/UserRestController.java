@@ -35,8 +35,6 @@ public class UserRestController {
     public ResponseEntity<User> getUser(@PathVariable("id") Long userId) throws ValidationException, NotFoundException {
         HttpHeaders httpHeaders = new HttpHeaders();
         User user = userService.getById(userId);
-        if(user == null)
-            throw new NotFoundException("User was not found");
         return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
     }
 

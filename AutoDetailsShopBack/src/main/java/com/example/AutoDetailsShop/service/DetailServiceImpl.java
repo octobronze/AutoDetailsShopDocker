@@ -20,10 +20,10 @@ public class DetailServiceImpl implements DetailService{
     }
 
     @Override
-    public Detail getById(Long id) throws ValidationException {
+    public Detail getById(Long id) throws ValidationException, NotFoundException {
         if(id == null)
             throw new ValidationException("Id is null");
-        return detailRepo.findById(id).orElse(null);
+        return detailRepo.findById(id).orElseThrow(() -> new NotFoundException("Detail was not found"));
     }
 
     @Override

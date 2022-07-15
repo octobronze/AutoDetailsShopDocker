@@ -29,8 +29,6 @@ public class DetailRestController {
     public ResponseEntity<Detail> getDetail(@PathVariable("id") Long detailId) throws ValidationException, NotFoundException {
         HttpHeaders httpHeaders = new HttpHeaders();
         Detail detail = detailService.getById(detailId);
-        if(detail == null)
-            throw new NotFoundException("Detail was not found");
         return new ResponseEntity<>(detail, httpHeaders, HttpStatus.OK);
     }
 

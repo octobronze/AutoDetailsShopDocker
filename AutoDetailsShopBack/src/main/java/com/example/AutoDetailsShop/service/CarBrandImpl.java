@@ -20,10 +20,10 @@ public class CarBrandImpl implements CarBrandService {
     }
 
     @Override
-    public CarBrand getById(Long id) throws ValidationException {
+    public CarBrand getById(Long id) throws ValidationException, NotFoundException {
         if(id == null)
             throw new ValidationException("Id is null");
-        return carBrandRepo.findById(id).orElse(null);
+        return carBrandRepo.findById(id).orElseThrow(() -> new NotFoundException("Car brand was not found"));
     }
 
     @Override
