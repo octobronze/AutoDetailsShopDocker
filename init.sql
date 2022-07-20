@@ -52,6 +52,18 @@ CREATE TABLE users
     PRIMARY KEY(id)
 );
 
+CREATE TABLE refresh_tokens
+(
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+    token character varying(255) NOT NULL,
+    expiration_time timestamp NOT NULL,
+    user_id bigint NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT fk_users
+        FOREIGN KEY(user_id)
+	    REFERENCES users(id)
+);
+
 INSERT INTO details(detail_name) VALUES 
 	('engine'),
 	('wheels'),

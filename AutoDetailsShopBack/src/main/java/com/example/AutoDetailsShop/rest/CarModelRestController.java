@@ -28,8 +28,6 @@ public class CarModelRestController {
     public ResponseEntity<CarModel> getCarModel(@PathVariable("id") Long carModelId) throws ValidationException, NotFoundException {
         HttpHeaders httpHeaders = new HttpHeaders();
         CarModel carModel = carModelService.getById(carModelId);
-        if(carModel == null)
-            throw new NotFoundException("Car model was not found");
         return new ResponseEntity<>(carModel, httpHeaders, HttpStatus.OK);
     }
 

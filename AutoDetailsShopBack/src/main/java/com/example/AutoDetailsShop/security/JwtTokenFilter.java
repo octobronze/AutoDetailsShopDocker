@@ -24,22 +24,29 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-        try {
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                if (authentication != null) {
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+        String uri = ((HttpServletRequest) request).getRequestURI();
+        if(!refreshTokenRequest(uri)) {
+            try {
+                if (token != null && jwtTokenProvider.validateToken(token)) {
+                    Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                    if (authentication != null) {
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
+            } catch (JwtAuthException e) {
+                SecurityContextHolder.clearContext();
+                ((HttpServletResponse) response).sendError(e.getHttpStatus().value());
+                throw new JwtAuthException("Jwt token is inspired or invalid");
             }
-        }catch (JwtAuthException e){
-            SecurityContextHolder.clearContext();
-            ((HttpServletResponse) response).sendError(e.getHttpStatus().value());
-            throw new JwtAuthException("Jwt token is inspired or invalid");
         }
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "accept, accept-encoding, authorization, content-type, dnt, origin, user-agent, x-csrftoken, x-requested-with");
         chain.doFilter(request, response);
+    }
+
+    boolean refreshTokenRequest(String uri){
+        return uri.compareTo("/api/refresh_token/") == 0;
     }
 }

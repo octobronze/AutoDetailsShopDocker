@@ -15,8 +15,8 @@ import java.util.List;
 @Slf4j
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService {
-    private final UserRepo userRepo;
 
+    private final UserRepo userRepo;
 
     public UserServiceImpl(UserRepo userRepo) {
         this.userRepo = userRepo;
@@ -42,6 +42,20 @@ public class UserServiceImpl implements UserService {
         user.setRole(Role.USER);
         user.setStatus(Status.Suspended);
         userRepo.save(user);
+    }
+
+    @Override
+    public User createUser(String username, String password, String email, String firstName, String lastName, String sex, Role role, Status status) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setSex(sex);
+        user.setRole(role);
+        user.setStatus(status);
+        return user;
     }
 
     public void delete(Long id) throws ValidationException, NotFoundException {

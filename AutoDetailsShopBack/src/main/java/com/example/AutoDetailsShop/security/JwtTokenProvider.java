@@ -32,7 +32,7 @@ public class JwtTokenProvider {
     private long validityInMilliseconds;
 
     @PostConstruct
-    protected void init(){
+    private void init(){
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
@@ -40,7 +40,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("role", role);
         Date start = new Date();
-        Date finish = new Date(start.getTime() + validityInMilliseconds * 1000);
+        Date finish = new Date(start.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
                 .setClaims(claims)
