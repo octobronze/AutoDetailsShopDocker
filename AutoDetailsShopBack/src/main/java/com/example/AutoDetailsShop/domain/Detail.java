@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import javax.persistence.*;
 
 @Table(name = "details")
@@ -19,6 +18,7 @@ public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name="detail_name", nullable = false)
     private String detailName;
 

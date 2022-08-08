@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -17,7 +16,6 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-
     private final UserDetailsService userDetailsService;
 
     public JwtTokenProvider(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
@@ -67,7 +65,6 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request){
         return request.getHeader(authorizationHeader);
     }
-
 
     public String getUsername(String token){
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();

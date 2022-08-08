@@ -5,16 +5,13 @@ import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.filters.OfferFilter;
 import com.example.AutoDetailsShop.repos.OfferRepo;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Slf4j
 @Service("offerServiceImpl")
 public class OfferServiceImpl implements OfferService{
-
     private final OfferRepo offerRepo;
 
     public OfferServiceImpl(OfferRepo offerRepo) {
@@ -57,5 +54,4 @@ public class OfferServiceImpl implements OfferService{
     public List<Offer> getAll(){
         return offerRepo.findAll();
     }
-
 }

@@ -92,7 +92,7 @@ INSERT INTO car_models(car_model_name) VALUES
 	('VAZ-2105');
 
 INSERT INTO users (username, password, email, first_name, last_name, sex, role, status) VALUES
-('Max', '$2a$12$2h6GG2lkPydluZvZro2YYOigM5YskqkVbVkJ9sSkbGdwBsrN3d7MK', 'max@gmail.com', 'Maxim', 'Gromyko', 'male', 'ADMIN', 'Suspended'),
+('Max', '$2a$12$2h6GG2lkPydluZvZro2YYOigM5YskqkVbVkJ9sSkbGdwBsrN3d7MK', 'maks.gromyk000@gmail.com', 'Maxim', 'Gromyko', 'male', 'ADMIN', 'Suspended'),
 ('Den', '$2a$12$eD.0COMh0fr61nMY1CWmTOiIv9v8BnJ1E.xgBb4w0kjIeLGMe83HO', 'den@gmail.com', 'Denis', 'Vorozhtsov', 'male', 'USER', 'Suspended'),
 ('Tom', '$2a$12$qLqVy9asyZWfpabj4otkQeA./H9TmcEeMfncUyKV8oEr0c9C799Ma', 'tema@gmail.com', 'Artyom', 'Maiseikov', 'male', 'USER', 'Suspended');
 

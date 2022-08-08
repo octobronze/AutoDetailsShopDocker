@@ -18,7 +18,6 @@ import java.util.UUID;
 
 @Component
 public class RefreshTokenProvider {
-
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
     private final UserService userService;

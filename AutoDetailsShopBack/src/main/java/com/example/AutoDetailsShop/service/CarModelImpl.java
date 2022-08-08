@@ -4,15 +4,11 @@ import com.example.AutoDetailsShop.domain.CarModel;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.repos.CarModelRepo;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service("carModelServiceImpl")
-@Slf4j
 public class CarModelImpl implements CarModelService{
-
     private final CarModelRepo carModelRepo;
 
     public CarModelImpl(CarModelRepo carModelRepo){

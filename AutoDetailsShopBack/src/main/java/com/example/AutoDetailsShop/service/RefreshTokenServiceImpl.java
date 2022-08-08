@@ -10,7 +10,6 @@ import java.util.Date;
 
 @Service("refreshTokenServiceImpl")
 public class RefreshTokenServiceImpl implements RefreshTokenService{
-
     RefreshTokenRepo refreshTokenRepo;
 
     RefreshTokenServiceImpl(RefreshTokenRepo refreshTokenRepo){
@@ -51,17 +50,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
     @Override
     public boolean isValid(RefreshToken refreshToken) {
         Date currentDate = new Date();
-        Date expirationDate = refreshToken.getExpirationDate();
+        Date expirationDate = refreshToken.getExpirationTime();
         return expirationDate.after(currentDate);
     }
 
     @Override
-    public RefreshToken buildToken(String token, Date expirationDate, User user) {
+    public RefreshToken buildToken(String token, Date expirationTime, User user) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(token);
-        refreshToken.setExpirationDate(expirationDate);
+        refreshToken.setExpirationTime(expirationTime);
         refreshToken.setUser(user);
         return refreshToken;
     }
-
 }

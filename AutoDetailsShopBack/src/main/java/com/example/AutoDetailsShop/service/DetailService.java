@@ -3,7 +3,6 @@ package com.example.AutoDetailsShop.service;
 import com.example.AutoDetailsShop.domain.Detail;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
-
 import java.util.List;
 
 public interface DetailService {

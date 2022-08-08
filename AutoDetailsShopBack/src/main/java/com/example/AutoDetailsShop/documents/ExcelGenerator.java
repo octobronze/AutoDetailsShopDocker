@@ -15,31 +15,25 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public final class ExcelGenerator {
+
     public static ByteArrayInputStream generateExcelForOffers(OfferService offerService) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Offers");
         List<Offer> offers = offerService.getAll();
-
         Row headerRow = sheet.createRow(0);
         CellStyle headerStyle = workbook.createCellStyle();
         HSSFFont headerFont = workbook.createFont();
         headerFont.setBold(true);
-        //headerFont.setFontHeight((short) 16);
         headerStyle.setFont(headerFont);
-
         createCell(sheet, headerRow, 0, "Id", headerStyle);
         createCell(sheet, headerRow, 1, "Detail name", headerStyle);
         createCell(sheet, headerRow, 2, "Car brand name", headerStyle);
         createCell(sheet, headerRow, 3, "Car model name", headerStyle);
         createCell(sheet, headerRow, 4, "Price", headerStyle);
-
         int rowCount = 1;
-
         CellStyle bodyStyle = workbook.createCellStyle();
         HSSFFont bodyFont = workbook.createFont();
-        //bodyFont.setFontHeight((short) 14);
         bodyStyle.setFont(bodyFont);
-
         for(Offer offer : offers){
             Row bodyRow = sheet.createRow(rowCount ++);
             int columnCount = 0;

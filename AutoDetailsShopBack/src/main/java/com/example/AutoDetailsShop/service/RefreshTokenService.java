@@ -4,8 +4,8 @@ import com.example.AutoDetailsShop.domain.RefreshToken;
 import com.example.AutoDetailsShop.domain.User;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
-
 import java.util.Date;
+
 public interface RefreshTokenService {
 
     RefreshToken getByToken(String token) throws NotFoundException;
@@ -16,7 +16,7 @@ public interface RefreshTokenService {
 
     RefreshToken getByUsername(String username) throws ValidationException, NotFoundException;
 
-    boolean isValid(RefreshToken refreshToken);
+    boolean isValid(RefreshToken refreshToken );
 
-    RefreshToken buildToken(String token, Date expirationDate, User user);
+    RefreshToken buildToken(String token, Date expirationTime, User user);
 }

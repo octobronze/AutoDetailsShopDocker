@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,6 +13,7 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 public class CarBrand {
+
     @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +21,4 @@ public class CarBrand {
 
     @Column(name="car_brand_name", nullable = false)
     private String carBrandName;
-
 }

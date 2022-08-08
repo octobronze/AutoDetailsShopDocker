@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,6 +14,7 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 public class RefreshToken {
+
     @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,8 @@ public class RefreshToken {
     @Column(name = "token")
     private String token;
 
-    @Column(name = "expiration_date")
-    private Date expirationDate;
+    @Column(name = "expiration_time")
+    private Date expirationTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

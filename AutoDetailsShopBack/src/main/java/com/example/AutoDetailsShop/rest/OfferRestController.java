@@ -21,12 +21,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/offers/")
+@RequestMapping("/api/domain/offers/")
 public class OfferRestController {
-
-
     private final OfferService offerService;
 
     public OfferRestController(@Qualifier("offerServiceImpl") OfferService offerService) {
@@ -99,6 +96,5 @@ public class OfferRestController {
         ByteArrayInputStream in = ExcelGenerator.generateExcelForOffers(offerService);
         return new ResponseEntity<>(new InputStreamResource(in), httpHeaders, HttpStatus.OK);
     }
-
 }
 

@@ -4,7 +4,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -24,25 +23,19 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-        String uri = ((HttpServletRequest) request).getRequestURI();
-        if(!refreshTokenRequest(uri)) {
-            try {
-                if (token != null && jwtTokenProvider.validateToken(token)) {
-                    Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                    if (authentication != null) {
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                    }
+        try {
+            String uri = ((HttpServletRequest) request).getRequestURI();
+            if (token != null && jwtTokenProvider.validateToken(token) && !refreshTokenRequest(uri)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                if (authentication != null) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
-            } catch (JwtAuthException e) {
-                SecurityContextHolder.clearContext();
-                ((HttpServletResponse) response).sendError(e.getHttpStatus().value());
-                throw new JwtAuthException("Jwt token is inspired or invalid");
             }
+        } catch (JwtAuthException e) {
+            SecurityContextHolder.clearContext();
+            ((HttpServletResponse) response).sendError(e.getHttpStatus().value());
+            throw new JwtAuthException("Jwt token is inspired or invalid");
         }
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "accept, accept-encoding, authorization, content-type, dnt, origin, user-agent, x-csrftoken, x-requested-with");
         chain.doFilter(request, response);
     }
 

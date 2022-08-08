@@ -1,16 +1,11 @@
-package com.example.AutoDetailsShop.rest;
+package com.example.AutoDetailsShop.exceptions;
 
 import com.example.AutoDetailsShop.domain.ErrorResponse;
-import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
-import com.example.AutoDetailsShop.exceptions.ExpirationException;
-import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import com.example.AutoDetailsShop.exceptions.ValidationException;
-
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -66,4 +61,13 @@ public class ControllerAdvisor {
                 .build();
     }
 
+    @ExceptionHandler(PinIsIncorrectException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handlePinIsIncorrectException(PinIsIncorrectException pinIsIncorrect){
+        return ErrorResponse.builder()
+                .message(pinIsIncorrect.getMessage())
+                .httpStatus(HttpStatus.FORBIDDEN)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 }

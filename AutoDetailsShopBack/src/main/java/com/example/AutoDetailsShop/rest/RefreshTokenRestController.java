@@ -9,14 +9,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/refresh_token/")
+@RequestMapping("/api/domain/refresh_token/")
 public class RefreshTokenRestController {
-
     private final RefreshTokenProvider refreshTokenProvider;
 
     RefreshTokenRestController(RefreshTokenProvider refreshTokenProvider){

@@ -7,12 +7,9 @@ import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.repos.UserRepo;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Slf4j
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService {
 

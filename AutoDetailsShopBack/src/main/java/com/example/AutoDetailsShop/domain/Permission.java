@@ -1,6 +1,7 @@
 package com.example.AutoDetailsShop.domain;
 
 public enum Permission {
+
     DEVELOPERS_READ("developers:read"),
     DEVELOPERS_WRITE("developers:write");
 

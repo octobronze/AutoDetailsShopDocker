@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class AlreadyExistsException extends Exception{
-
+public class InvalidPinException extends Exception{
     private final String message;
 }
