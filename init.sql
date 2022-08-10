@@ -48,6 +48,7 @@ CREATE TABLE users
     sex character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     username character varying(255) NOT NULL,
+    cred_token character varying(65535),
     status character varying(255) NOT NULL,
     PRIMARY KEY(id)
 );

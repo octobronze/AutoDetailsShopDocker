@@ -61,11 +61,11 @@ public class ControllerAdvisor {
                 .build();
     }
 
-    @ExceptionHandler(PinIsIncorrectException.class)
+    @ExceptionHandler(CodeIsIncorrectException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handlePinIsIncorrectException(PinIsIncorrectException pinIsIncorrect){
+    public ErrorResponse handlePinIsIncorrectException(CodeIsIncorrectException codeIsIncorrect){
         return ErrorResponse.builder()
-                .message(pinIsIncorrect.getMessage())
+                .message(codeIsIncorrect.getMessage())
                 .httpStatus(HttpStatus.FORBIDDEN)
                 .timestamp(LocalDateTime.now())
                 .build();

@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class InvalidPinException extends Exception{
+public class CodeIsIncorrectException extends Exception{
     private final String message;
 }

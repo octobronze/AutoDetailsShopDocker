@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class OtpRequestDTO {
-    private String otpToken;
-    private String pin;
+    private String token;
+    private int code;
 }

@@ -3,31 +3,43 @@ package com.example.AutoDetailsShop.service;
 import com.example.AutoDetailsShop.DTO.AuthRequestDTO;
 import com.example.AutoDetailsShop.DTO.OtpRequestDTO;
 import com.example.AutoDetailsShop.DTO.RegRequestDTO;
+import com.example.AutoDetailsShop.DTO.UserTOTP_DTO;
 import com.example.AutoDetailsShop.domain.Role;
 import com.example.AutoDetailsShop.domain.Status;
 import com.example.AutoDetailsShop.domain.User;
 import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
+import com.example.AutoDetailsShop.exceptions.CodeIsIncorrectException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
-import com.example.AutoDetailsShop.exceptions.PinIsIncorrectException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
-import com.example.AutoDetailsShop.security.OtpProvider;
+import com.example.AutoDetailsShop.security.CredentialTokenProvider;
 import com.example.AutoDetailsShop.security.RefreshTokenProvider;
 import com.example.AutoDetailsShop.security.JwtTokenProvider;
+import com.example.AutoDetailsShop.security.StringEncryptProvider;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.warrenstrange.googleauth.GoogleAuthenticatorConfig;
+import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
+import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+import com.google.zxing.qrcode.QRCodeWriter;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.mail.MessagingException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service("userAuthServiceImpl")
@@ -36,20 +48,27 @@ public class UserAuthServiceImpl implements UserAuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenProvider jwtRefreshTokenProvider;
-    private final OtpProvider otpProvider;
-    private final EmailService emailService;
+    private final GoogleAuthenticator googleAuthenticator;
+    private final CredentialRepositoryImpl credentialRepository;
+    private final CredentialTokenProvider credentialTokenProvider;
+    private final StringEncryptProvider stringEncryptProvider;
 
     UserAuthServiceImpl(@Qualifier("userServiceImpl") UserService userService,
                         AuthenticationManager authenticationManager,
                         JwtTokenProvider jwtTokenProvider,
-                        RefreshTokenProvider jwtRefreshTokenProvider, OtpProvider otpProvider,
-                        @Qualifier("emailServiceImpl") EmailService emailService){
+                        RefreshTokenProvider jwtRefreshTokenProvider,
+                        GoogleAuthenticator googleAuthenticator,
+                        CredentialRepositoryImpl credentialRepository,
+                        CredentialTokenProvider credentialTokenProvider,
+                        StringEncryptProvider stringEncryptProvider){
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.jwtRefreshTokenProvider = jwtRefreshTokenProvider;
-        this.otpProvider = otpProvider;
-        this.emailService = emailService;
+        this.googleAuthenticator = googleAuthenticator;
+        this.credentialRepository = credentialRepository;
+        this.credentialTokenProvider = credentialTokenProvider;
+        this.stringEncryptProvider = stringEncryptProvider;
     }
 
     @Override
@@ -59,16 +78,20 @@ public class UserAuthServiceImpl implements UserAuthService {
     }
 
     @Override
-    public Map<Object, Object> authenticate(AuthRequestDTO requestDTO) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ValidationException, MessagingException, UnsupportedEncodingException {
-        Map<Object, Object> response = new HashMap<>();
+    public Map<Object, Object> login(AuthRequestDTO requestDTO) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ValidationException, NotFoundException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestDTO.getUsername(), requestDTO.getPassword()));
-        String pin = otpProvider.createPin();
-        String token = otpProvider.buildOtp(pin, requestDTO.getUsername());
         User user = userService.getByUsername(requestDTO.getUsername());
-        emailService.send(user, pin);
-        response.put("token", token);
+        Map<Object, Object> response;
+        if(user.getCred_token() == null){
+            response = getCredentials(requestDTO.getUsername(), user.getRole().name());
+        }else{
+            response = new HashMap<>();
+            response.put("otp_token", stringEncryptProvider.encryptString(requestDTO.getUsername()));
+        }
         return response;
     }
+
+
 
     @Override
     public User registration(RegRequestDTO requestDTO) throws ValidationException, AlreadyExistsException {
@@ -78,19 +101,56 @@ public class UserAuthServiceImpl implements UserAuthService {
     }
 
     @Override
-    public Map<Object, Object> authorization(OtpRequestDTO requestDTO) throws ValidationException, NotFoundException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, PinIsIncorrectException {
-        if(!otpProvider.comparePinToToken(requestDTO.getPin(), requestDTO.getOtpToken())){
-            throw new PinIsIncorrectException("Pin is incorrect");
+    public Map<Object, Object> authenticate(OtpRequestDTO requestDTO) throws ValidationException, NotFoundException, CodeIsIncorrectException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        String username = stringEncryptProvider.decryptString(requestDTO.getToken());
+        boolean validate = googleAuthenticator.authorizeUser(username, requestDTO.getCode());
+        if(!validate){
+            throw new CodeIsIncorrectException("Code code is incorrect");
         }
-        String username = otpProvider.getUsernameByToken(requestDTO.getOtpToken());
         User user = userService.getByUsername(username);
-        String token = jwtTokenProvider.createToken(user.getUsername(), user.getRole().name());
-        String refreshToken = jwtRefreshTokenProvider.createToken(user.getUsername());
-        Map<Object, Object> response = new HashMap<>();
-        response.put("username", user.getUsername());
-        response.put("role", user.getRole().name());
-        response.put("token", token);
-        response.put("refreshToken", refreshToken);
-        return response;
+        return getCredentials(username, user.getRole().name());
+    }
+
+    @Override
+    public void getQR(HttpServletResponse response, HttpServletRequest request) throws IOException, WriterException, ValidationException {
+        String token = jwtTokenProvider.resolveToken(request);
+        String username = jwtTokenProvider.getUsername(token);
+        User user = userService.getByUsername(username);
+        GoogleAuthenticatorKey key;
+        if (user.getCred_token() == null) {
+            key = googleAuthenticator.createCredentials(username);
+            UserTOTP_DTO userTOTP = credentialRepository.getUser(username);
+            String credToken = credentialTokenProvider.createToken(userTOTP.getUsername(), userTOTP.getSecretKey(), userTOTP.getValidationCode(), userTOTP.getScratchCodes());
+            user.setCred_token(credToken);
+            userService.update(user);
+        }else {
+            String credToken = user.getCred_token();
+            String secretKey = credentialTokenProvider.getUserSecretKey(credToken);
+            int verificationCode = credentialTokenProvider.getVerificationCode(credToken);
+            List<Integer> scratchCodes = credentialTokenProvider.getScratchCodes(credToken);
+            GoogleAuthenticatorKey.Builder builder = new GoogleAuthenticatorKey.Builder(secretKey);
+            builder.setConfig(new GoogleAuthenticatorConfig());
+            builder.setScratchCodes(scratchCodes);
+            builder.setVerificationCode(verificationCode);
+            key = builder.build();
+        }
+
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL("auto-details-shop", username, key);
+        BitMatrix bitMatrix = qrCodeWriter.encode(otpAuthURL, BarcodeFormat.QR_CODE, 200, 200);
+        ServletOutputStream outputStream = response.getOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+        outputStream.close();
+    }
+
+    private Map<Object, Object> getCredentials(String username, String roleName) throws ValidationException, NotFoundException {
+        Map<Object, Object> credentials = new HashMap<>();
+        String token = jwtTokenProvider.createToken(username, roleName);
+        String refreshToken = jwtRefreshTokenProvider.createToken(username);
+        credentials.put("username", username);
+        credentials.put("role", username);
+        credentials.put("token", token);
+        credentials.put("refreshToken", refreshToken);
+        return credentials;
     }
 }

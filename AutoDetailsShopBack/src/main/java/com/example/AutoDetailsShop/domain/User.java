@@ -39,6 +39,9 @@ public class User {
     @Column(name = "role")
     private Role role;
 
+    @Column(name = "cred_token")
+    private String cred_token;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name= "status")
     private Status status;
