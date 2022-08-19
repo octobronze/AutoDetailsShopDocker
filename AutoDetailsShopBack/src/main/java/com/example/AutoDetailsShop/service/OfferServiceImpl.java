@@ -6,9 +6,13 @@ import com.example.AutoDetailsShop.exceptions.ValidationException;
 import com.example.AutoDetailsShop.filters.OfferFilter;
 import com.example.AutoDetailsShop.repos.OfferRepo;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Service("offerServiceImpl")
 public class OfferServiceImpl implements OfferService{
@@ -19,11 +23,14 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public Offer getById(Long id) throws ValidationException, NotFoundException {
-        return offerRepo.findById(id).orElseThrow(() -> new NotFoundException("Offer was not found"));
+    @Async
+    public CompletableFuture<Offer> getById(Long id) throws ValidationException, NotFoundException, InterruptedException {
+        Thread.sleep(1000);
+        return CompletableFuture.completedFuture(offerRepo.findById(id).orElseThrow(() -> new NotFoundException("Offer was not found")));
     }
 
     @Override
+    @Async
     public void save(Offer offer) throws ValidationException {
         if(offer == null)
             throw new ValidationException("Offer is be null");
@@ -31,7 +38,8 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public void delete(Long id) throws ValidationException, NotFoundException {
+    @Async
+    public void delete(Long id) {
         if(id == null)
             throw new ValidationException("Id is null");
         Offer offer = offerRepo.findById(id).orElseThrow(() -> new NotFoundException("Offer was not found"));
@@ -39,7 +47,8 @@ public class OfferServiceImpl implements OfferService{
     }
 
     @Override
-    public List<Offer> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, int page, int size) {
+    @Async
+    public CompletableFuture<List<Offer>> getAll(String detailName, String carBrandName, String carModelName, BigDecimal price, int page, int size) {
         List<Offer> offers;
         if(detailName == null && carBrandName == null
                 && carModelName == null && price == null){
@@ -47,7 +56,7 @@ public class OfferServiceImpl implements OfferService{
         }else{
             offers = offerRepo.findAll(OfferFilter.filterByAllFields(detailName, carBrandName, carModelName, price), PageRequest.of(page, size)).getContent();
         }
-        return offers;
+        return CompletableFuture.completedFuture(offers);
     }
 
     @Override

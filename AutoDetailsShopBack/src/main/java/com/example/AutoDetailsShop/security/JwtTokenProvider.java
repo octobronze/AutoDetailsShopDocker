@@ -1,5 +1,8 @@
 package com.example.AutoDetailsShop.security;
 
+import com.example.AutoDetailsShop.domain.User;
+import com.example.AutoDetailsShop.exceptions.ValidationException;
+import com.example.AutoDetailsShop.service.UserService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +20,12 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
-    public JwtTokenProvider(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+    public JwtTokenProvider(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+                            @Qualifier("userServiceImpl") UserService userService) {
         this.userDetailsService = userDetailsService;
+        this.userService = userService;
     }
 
     @Value("${jwt.secret}")
@@ -68,5 +74,12 @@ public class JwtTokenProvider {
 
     public String getUsername(String token){
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public User getUserFromRequest(HttpServletRequest request) throws ValidationException {
+        String token = resolveToken(request);
+        String username = getUsername(token);
+        User user = userService.getByUsername(username);
+        return user;
     }
 }

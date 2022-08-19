@@ -21,9 +21,9 @@ public class ControllerAdvisor {
                 .build();
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(NotFoundException notFoundException){
+    public ErrorResponse handleNotFoundException(Exception notFoundException){
         return ErrorResponse.builder()
                 .message(notFoundException.getMessage())
                 .httpStatus(HttpStatus.NOT_FOUND)

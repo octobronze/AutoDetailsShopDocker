@@ -113,13 +113,11 @@ public class UserAuthServiceImpl implements UserAuthService {
 
     @Override
     public void getQR(HttpServletResponse response, HttpServletRequest request) throws IOException, WriterException, ValidationException {
-        String token = jwtTokenProvider.resolveToken(request);
-        String username = jwtTokenProvider.getUsername(token);
-        User user = userService.getByUsername(username);
+        User user = jwtTokenProvider.getUserFromRequest(request);
         GoogleAuthenticatorKey key;
         if (user.getCred_token() == null) {
-            key = googleAuthenticator.createCredentials(username);
-            UserTOTP_DTO userTOTP = credentialRepository.getUser(username);
+            key = googleAuthenticator.createCredentials(user.getUsername());
+            UserTOTP_DTO userTOTP = credentialRepository.getUser(user.getUsername());
             String credToken = credentialTokenProvider.createToken(userTOTP.getUsername(), userTOTP.getSecretKey(), userTOTP.getValidationCode(), userTOTP.getScratchCodes());
             user.setCred_token(credToken);
             userService.update(user);
@@ -136,7 +134,7 @@ public class UserAuthServiceImpl implements UserAuthService {
         }
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL("auto-details-shop", username, key);
+        String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL("auto-details-shop", user.getUsername(), key);
         BitMatrix bitMatrix = qrCodeWriter.encode(otpAuthURL, BarcodeFormat.QR_CODE, 200, 200);
         ServletOutputStream outputStream = response.getOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);

@@ -65,6 +65,19 @@ CREATE TABLE refresh_tokens
 	    REFERENCES users(id)
 );
 
+CREATE TABLE audit
+(
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+    request character varying(255) NOT NULL,
+    link character varying(255) NOT NULL,
+    interaction_time timestamp NOT NULL,
+    user_id bigint NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT fk_users
+        FOREIGN KEY(user_id)
+            REFERENCES users(id)
+);
+
 INSERT INTO details(detail_name) VALUES 
 	('engine'),
 	('wheels'),

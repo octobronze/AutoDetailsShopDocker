@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service("carBrandServiceImpl")
-public class CarBrandImpl implements CarBrandService {
+public class CarBrandServiceImpl implements CarBrandService {
     CarBrandRepo carBrandRepo;
 
-    public CarBrandImpl(CarBrandRepo carBrandRepo){
+    public CarBrandServiceImpl(CarBrandRepo carBrandRepo){
         this.carBrandRepo = carBrandRepo;
     }
 

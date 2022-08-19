@@ -13,10 +13,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public final class ExcelGenerator {
 
-    public static ByteArrayInputStream generateExcelForOffers(OfferService offerService) throws IOException {
+    public static CompletableFuture<ByteArrayInputStream> generateExcelForOffers(OfferService offerService) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Offers");
         List<Offer> offers = offerService.getAll();
@@ -47,7 +48,7 @@ public final class ExcelGenerator {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         workbook.write(out);
         workbook.close();
-        return new ByteArrayInputStream(out.toByteArray());
+        return CompletableFuture.completedFuture(new ByteArrayInputStream(out.toByteArray()));
     }
 
     private static void createCell(HSSFSheet sheet, Row row, int columnCount, Object value, CellStyle style){

@@ -6,6 +6,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class AlreadyExistsException extends Exception{
-
     private final String message;
 }

@@ -8,6 +8,7 @@ import com.example.AutoDetailsShop.exceptions.AlreadyExistsException;
 import com.example.AutoDetailsShop.exceptions.CodeIsIncorrectException;
 import com.example.AutoDetailsShop.exceptions.NotFoundException;
 import com.example.AutoDetailsShop.exceptions.ValidationException;
+import com.example.AutoDetailsShop.service.AuditService;
 import com.example.AutoDetailsShop.service.UserAuthService;
 import com.itextpdf.text.pdf.qrcode.WriterException;
 import org.springframework.beans.factory.annotation.Qualifier;

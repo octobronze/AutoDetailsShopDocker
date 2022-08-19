@@ -9,12 +9,13 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public final class PdfGenerator {
 
     private PdfGenerator(){}
 
-    public static ByteArrayInputStream generatePdfForOffers(OfferService offerService) throws DocumentException {
+    public static CompletableFuture<ByteArrayInputStream> generatePdfForOffers(OfferService offerService) throws DocumentException {
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
         table.setWidths(new int[]{1, 3, 3, 3, 3});
@@ -56,6 +57,6 @@ public final class PdfGenerator {
         document.add(paragraph);
         document.add(table);
         document.close();
-        return new ByteArrayInputStream(out.toByteArray());
+        return CompletableFuture.completedFuture(new ByteArrayInputStream(out.toByteArray()));
     }
 }
